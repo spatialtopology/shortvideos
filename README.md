@@ -34,6 +34,8 @@ ranging from 'not at all' to 'most imaginable'. The three classes of ratings the
 
 
 ##To Dos
+1. Swap out screenshots above to newest version ('how similar are YOU to this character')
+        
         
 Below is one example screenshot of each of the 3 possible rating scales:
 1. Self-similarity
