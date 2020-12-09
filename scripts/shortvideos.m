@@ -9,7 +9,7 @@ function shortvideos(sub_num, biopac, debug)
 %   that participants have already viewed during the functional alignment
 %   video portion of the experiment. It then asks the participant to make
 %   one of three types of judgements:
-%   1.) Inclusion of Self in Other -- How much does the target character in
+%   1.) Inclusion of Self in Other -- How much doesls the target character in
 %    the video overlap with the participants sense of self?
 %   2.) Likeability -- How much does the participant like the target
 %   character in the video?
@@ -206,6 +206,7 @@ preloadsecs = [];
 rate=1;
 %% H. Make Images Into Textures ________________________________________________
 DrawFormattedText(p.ptb.window,sprintf('LOADING\n\n0%% complete'),'center','center',p.ptb.white );
+HideCursor;
 Screen('Flip',p.ptb.window);
 
     % preload CUE
@@ -422,7 +423,7 @@ rating_trajectory{trl,1} = trajectory;
  tmp_file_name = fullfile(sub_save_dir,[strcat('sub-', sprintf('%04d', sub_num)), '_task-',taskname,'_TEMPbeh.csv' ]);
  writetable(T,tmp_file_name);
 end
-%Screen('Close', rating_texture);
+% Screen('Close', rating_texture);
 end
 
 %% ____ end instructions press e ___________________
@@ -454,11 +455,8 @@ psychtoolbox_repoFileName = fullfile(repo_save_dir, [bids_string,'_psychtoolboxp
 save(psychtoolbox_saveFileName, 'p');
 save(psychtoolbox_repoFileName, 'p');
 
-clear p;
-if biopac
-channel.d.close();
-end
-Screen('Close'); close all; sca;
+if biopac;  channel.d.close();  end
+clear p; clearvars; Screen('Close'); close all; sca;
 
 
 
