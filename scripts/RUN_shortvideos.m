@@ -10,7 +10,7 @@ sub_num = input(sub_prompt);
 b_prompt = 'BIOPAC YES=1 NO=0 : ';
 biopac = input(b_prompt);
 
-debug = 1; %DEBUG_MODE = 1, Actual_experiment = 0
+debug = 0; %DEBUG_MODE = 1, Actual_experiment = 0
 
 
 shortvideos(sub_num, biopac, debug)
