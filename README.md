@@ -31,11 +31,15 @@ ranging from 'not at all' to 'most imaginable'. The three classes of ratings the
         * There are 7 different mentalizing questions because no single mentalizing question related directly to every video. 
         The different questions insure that there is more variance in mentalizing across videos.
         
-Each judg
+
+
+##To Dos
         
-Below is a screenshot of 3 possible rating scales:
+Below is one example screenshot of each of the 3 possible rating scales:
 1. Self-similarity
 ![self]()
+2. Likeability
+3. Mentalizing
         
 ### Running the Code
 To do
