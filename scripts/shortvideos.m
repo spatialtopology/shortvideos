@@ -208,6 +208,10 @@ rate=1;
 DrawFormattedText(p.ptb.window,sprintf('LOADING\n\n0%% complete'),'center','center',p.ptb.white );
 HideCursor;
 Screen('Flip',p.ptb.window);
+instruct_filepath              = fullfile(main_dir, 'stimuli', 'instructions');
+instruct_start                 = fullfile(instruct_filepath, 'start.png');
+instruct_trigger               = fullfile(instruct_filepath, 'trigger.png');
+instruct_end                   = fullfile(instruct_filepath, 'end.png');
 
     % preload CUE
 
@@ -229,14 +233,15 @@ Screen('Flip',p.ptb.window);
     size(rating_tex)
 
     % instruction, actual texture
-    %actual_tex = Screen('MakeTexture', p.ptb.window, imread(image_scale)); % pure rating scale
-    %start_tex = Screen('MakeTexture',p.ptb.window, imread(instruct_start));
-    %end_tex  = Screen('MakeTexture',p.ptb.window, imread(instruct_end));
+
     for v = 1:length(video_metadata.video_name)
         DrawFormattedText(p.ptb.window,sprintf('LOADING\n\n%d%% complete', ceil(100*v/length(video_metadata.video_name))),'center','center',p.ptb.white);
         Screen('Flip',p.ptb.window);
     end
-%end
+
+    start_tex       = Screen('MakeTexture',p.ptb.window, imread(instruct_start));
+    trigger_tex       = Screen('MakeTexture',p.ptb.window, imread(instruct_trigger));
+    end_tex       = Screen('MakeTexture',p.ptb.window, imread(instruct_end));
 
 
 
@@ -245,8 +250,11 @@ Screen('Flip',p.ptb.window);
 % ______________________________________________________________________________
 
 %% ______________________________ Instructions _________________________________
-Screen('TextSize',p.ptb.window,72);
-DrawFormattedText(p.ptb.window,'.','center',p.ptb.screenYpixels/2,255);
+% Screen('TextSize',p.ptb.window,72);
+% DrawFormattedText(p.ptb.window,'.','center',p.ptb.screenYpixels/2,255);
+% Screen('Flip',p.ptb.window);
+
+Screen('DrawTexture',p.ptb.window,start_tex,[],[]);
 Screen('Flip',p.ptb.window);
 
 
@@ -256,18 +264,19 @@ Screen('Flip',p.ptb.window);
 % 2) wait for trigger '5'
 DisableKeysForKbCheck([]);
 
-
-DrawFormattedText(p.ptb.window,'Waiting for experimenter\n\nexperimenters - press s','center',p.ptb.screenYpixels/2,255);
-Screen('Flip', p.ptb.window);
-WaitKeyPress(p.keys.start); % press s - will automatically show a fixton
+WaitKeyPress(p.keys.start);
 Screen('DrawLines', p.ptb.window, p.fix.allCoords,...
     p.fix.lineWidthPix, p.ptb.white, [p.ptb.xCenter p.ptb.yCenter], 2);
-Screen('Flip', p.ptb.window);
+Screen('Flip',p.ptb.window);
+
 
 WaitKeyPress(p.keys.trigger);
 T.param_trigger_onset(:) = GetSecs;
 T.param_start_biopac(:)                   = biopac_linux_matlab(biopac, channel, channel.trigger, 1);
 
+%% ___________________________ Dummy scans ____________________________
+Screen('DrawTexture',p.ptb.window,trigger_tex,[],[]);
+Screen('Flip',p.ptb.window);
 WaitSecs(TR*6);
 
 
@@ -426,14 +435,13 @@ end
 % Screen('Close', rating_texture);
 end
 
-%% ____ end instructions press e ___________________
-
-DrawFormattedText(p.ptb.window,'This is the end of this run\nPlease wait for experimenter\n\nExperimenters - press e','center',p.ptb.screenYpixels/2,255);
-T.param_end_instruct_onset(:)             = Screen('Flip', p.ptb.window);
-WaitKeyPress(p.keys.end);
+%% ______________________________ End Instructions _________________________________
+Screen('DrawTexture',p.ptb.window,end_tex,[],[]);
+T.param_end_instruct_onset(:)             = Screen('Flip',p.ptb.window);
 T.param_end_biopac(:)                     = biopac_linux_matlab(biopac, channel, channel.trigger, 0);
+WaitKeyPress(KbName('e'));
 T.param_experiment_duration(:) = T.param_end_instruct_onset(1) - T.param_trigger_onset(1);
-
+Screen('Close');
 
 
 %% _________________________ 8. save parameter _________________________________
